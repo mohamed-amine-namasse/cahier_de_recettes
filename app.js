@@ -4,6 +4,8 @@ const bodyParser = require("body-parser");
 
 const Thing = require("./models/Things");
 const mongoose = require("mongoose");
+const Recipe = require("./models/Recipes");
+const User = require("./models/Users");
 mongoose
   .connect(
     "mongodb+srv://mohamedaminenamasse_db_user:aII8GpHMxyqFBy9D@cluster0.41ovz2h.mongodb.net/test?retryWrites=true&w=majority"
