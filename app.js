@@ -1,35 +1,15 @@
 const express = require("express");
-
 const app = express();
+const bodyParser = require("body-parser");
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
-const uri =
-  "mongodb+srv://new-user:PWxayBGFhxFpgeK7@cluster0.wrsh4p6.mongodb.net/?appName=Cluster0";
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
-
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
-}
-run().catch(console.dir);
+const Thing = require("./models/Things");
+const mongoose = require("mongoose");
+mongoose
+  .connect(
+    "mongodb+srv://mohamedaminenamasse_db_user:aII8GpHMxyqFBy9D@cluster0.41ovz2h.mongodb.net/test?retryWrites=true&w=majority"
+  )
+  .then(() => console.log("Connexion à MongoDB réussie !"))
+  .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 app.use(express.json());
 app.use((req, res, next) => {
@@ -44,11 +24,17 @@ app.use((req, res, next) => {
   );
   next();
 });
+app.use(bodyParser.json());
+
 app.post("/api/stuff", (req, res, next) => {
-  console.log(req.body);
-  res.status(201).json({
-    message: "Objet créé !",
+  delete req.body._id;
+  const thing = new Thing({
+    ...req.body,
   });
+  thing
+    .save()
+    .then(() => res.status(201).json({ message: "Objet enregistré!" }))
+    .catch((error) => res.status(400).json({ error }));
 });
 app.get("/api/stuff", (req, res, next) => {
   const stuff = [
