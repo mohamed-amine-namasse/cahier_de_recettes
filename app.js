@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 
-const Thing = require("./models/Things");
 const Recipe = require("./models/Recipes");
 const User = require("./models/Users");
 const mongoose = require("mongoose");
@@ -28,37 +27,6 @@ app.use((req, res, next) => {
 });
 app.use(bodyParser.json());
 
-app.post("/api/stuff", (req, res, next) => {
-  delete req.body._id;
-  const thing = new Thing({
-    ...req.body,
-  });
-  thing
-    .save()
-    .then(() => res.status(201).json({ message: "Objet enregistré!" }))
-    .catch((error) => res.status(400).json({ error }));
-});
-app.put("/api/stuff/:id", (req, res, next) => {
-  Thing.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
-    .then(() => res.status(200).json({ message: "Objet modifié !" }))
-    .catch((error) => res.status(400).json({ error }));
-});
-app.delete("/api/stuff/:id", (req, res, next) => {
-  Thing.deleteOne({ _id: req.params.id })
-    .then(() => res.status(200).json({ message: "Objet supprimé !" }))
-    .catch((error) => res.status(400).json({ error }));
-});
-app.get("/api/stuff/:id", (req, res, next) => {
-  Thing.findOne({ _id: req.params.id })
-    .then((thing) => res.status(200).json(thing))
-    .catch((error) => res.status(404).json({ error }));
-});
-app.get("/api/stuff", (req, res, next) => {
-  Thing.find()
-    .then((things) => res.status(200).json(things))
-    .catch((error) => res.status(400).json({ error }));
-});
-
 // --- ROUTES POUR LES RECETTES ---
 
 // Ajouter une recette (POST)
@@ -81,20 +49,20 @@ app.get("/api/recettes", (req, res) => {
 });
 //Récuperer une recette par ID (GET)
 app.get("/api/recettes/:id", (req, res) => {
-  Thing.findOne({ _id: req.params.id })
+  Recipe.findOne({ _id: req.params.id })
     .then((thing) => res.status(200).json(thing))
     .catch((error) => res.status(404).json({ error }));
 });
 //Modifier une recette (PUT)
 app.put("/api/recettes/:id", (req, res) => {
-  Thing.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
+  Recipe.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
     .then(() => res.status(200).json({ message: "Recette modifiée !" }))
     .catch((error) => res.status(400).json({ error }));
 });
 //Supprimer une recette (DELETE)
-app.delete("/api/recettes/:id", (req, res, next) => {
-  Thing.deleteOne({ _id: req.params.id })
-    .then(() => res.status(200).json({ message: "Objet supprimé !" }))
+app.delete("/api/recettes/:id", (req, res) => {
+  Recipe.deleteOne({ _id: req.params.id })
+    .then(() => res.status(200).json({ message: "Recette supprimée !" }))
     .catch((error) => res.status(400).json({ error }));
 });
 module.exports = app;
