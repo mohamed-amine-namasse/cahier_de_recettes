@@ -1,4 +1,4 @@
-const Recipe = require("../models/Recipes");
+const Recipe = require("../models/Recipe");
 
 exports.createRecipe = (req, res, next) => {
   const recipe = new Recipe({
