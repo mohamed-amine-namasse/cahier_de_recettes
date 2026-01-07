@@ -7,6 +7,7 @@ const connectDB = require("./config/conn");
 
 connectDB();
 const recipeRoutes = require("./routes/recipe");
+const userRoutes = require("./routes/user");
 app.use(express.json());
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -23,4 +24,5 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 app.use("/api/recipe", recipeRoutes);
+app.use("/api/auth", userRoutes);
 module.exports = app;
