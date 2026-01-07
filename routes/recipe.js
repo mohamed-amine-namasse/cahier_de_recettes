@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const recetteCtrl = require("../controllers/recette");
+const recetteCtrl = require("../controllers/recipe");
 
 router.get("/", recetteCtrl.getAllRecipes);
 router.post("/", recetteCtrl.createRecipe);

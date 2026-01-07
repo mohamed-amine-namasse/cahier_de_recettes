@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const connectDB = require("./config/conn");
 
 connectDB();
-const recetteRoutes = require("./routes/recette");
+const recipeRoutes = require("./routes/recipe");
 app.use(express.json());
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -22,5 +22,5 @@ app.use((req, res, next) => {
 });
 app.use(bodyParser.json());
 
-app.use("/api/recette", recetteRoutes);
+app.use("/api/recipe", recipeRoutes);
 module.exports = app;
