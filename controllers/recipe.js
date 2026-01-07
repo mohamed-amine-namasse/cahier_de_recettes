@@ -1,24 +1,24 @@
 const Recipe = require("../models/Recipe");
 
 exports.createRecipe = (req, res, next) => {
-  const recipeObject = JSON.parse(req.body.recipe);
-  delete recipeObject._id;
-  delete recipeObject._userId;
   const recipe = new Recipe({
-    ...thingObject,
-    userId: req.auth.userId,
-    imageUrl: `${req.protocol}://${req.get("host")}/images/${
-      req.file.filename
-    }`,
+    title: req.body.title,
+    ingredients: req.body.ingredients,
+    steps: req.body.steps,
+    author: req.body.author,
+    date: req.body.date,
   });
-
   recipe
     .save()
     .then(() => {
-      res.status(201).json({ message: "Recette ajouté avec succès!" });
+      res.status(201).json({
+        message: "Recette ajoutée avec succès!",
+      });
     })
     .catch((error) => {
-      res.status(400).json({ error });
+      res.status(400).json({
+        error: error,
+      });
     });
 };
 exports.getOneRecipe = (req, res, next) => {

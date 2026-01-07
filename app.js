@@ -8,6 +8,7 @@ const connectDB = require("./config/conn");
 connectDB();
 const recipeRoutes = require("./routes/recipe");
 const userRoutes = require("./routes/user");
+const pictureRoutes = require("./routes/picture");
 app.use(express.json());
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -21,9 +22,10 @@ app.use((req, res, next) => {
   );
   next();
 });
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 
 app.use("/api/recipe", recipeRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/picture", pictureRoutes);
 app.use("/images", express.static(path.join(__dirname, "images")));
 module.exports = app;
