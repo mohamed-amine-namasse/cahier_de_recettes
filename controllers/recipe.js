@@ -68,7 +68,7 @@ exports.deleteRecipe = (req, res, next) => {
       if (recipe.userId != req.auth.userId) {
         res.status(401).json({ message: "Not authorized" });
       } else {
-        const filename = thing.imageUrl.split("/images/")[1];
+        const filename = recipe.imageUrl.split("/images/")[1];
         fs.unlink(`images/${filename}`, () => {
           Recipe.deleteOne({ _id: req.params.id })
             .then(() => {
