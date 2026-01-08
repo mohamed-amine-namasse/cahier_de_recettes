@@ -15,7 +15,7 @@ exports.createRecipe = (req, res, next) => {
   recipe
     .save()
     .then(() => {
-      res.status(201).json({ message: "Recette ajouté avec succès!" });
+      res.status(201).json({ message: "Recette ajoutée avec succès!" });
     })
     .catch((error) => {
       res.status(400).json({ error });
@@ -35,37 +35,51 @@ exports.getOneRecipe = (req, res, next) => {
     });
 };
 exports.modifyRecipe = (req, res, next) => {
-  const recipe = new Recipe({
-    _id: req.params.id,
-    title: req.body.title,
-    ingredients: req.body.ingredients,
-    steps: req.body.steps,
-    author: req.body.author,
-    date: req.body.date,
-  });
-  Recipe.updateOne({ _id: req.params.id }, recipe)
-    .then(() => {
-      res.status(201).json({
-        message: "Recette modifié avec succès!",
-      });
+  const recipeObject = req.file
+    ? {
+        ...JSON.parse(req.body.recipe),
+        imageUrl: `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`,
+      }
+    : { ...req.body };
+
+  delete recipeObject._userId;
+  Recipe.findOne({ _id: req.params.id })
+    .then((recipe) => {
+      if (recipe.userId != req.auth.userId) {
+        res.status(401).json({ message: "Not authorized" });
+      } else {
+        Recipe.updateOne(
+          { _id: req.params.id },
+          { ...recipeObject, _id: req.params.id }
+        )
+          .then(() => res.status(200).json({ message: "Recette modifiée!" }))
+          .catch((error) => res.status(401).json({ error }));
+      }
     })
     .catch((error) => {
-      res.status(400).json({
-        error: error,
-      });
+      res.status(400).json({ error });
     });
 };
 exports.deleteRecipe = (req, res, next) => {
-  Recipe.deleteOne({ _id: req.params.id })
-    .then(() => {
-      res.status(200).json({
-        message: "Recette supprimée!",
-      });
+  Recipe.findOne({ _id: req.params.id })
+    .then((recipe) => {
+      if (recipe.userId != req.auth.userId) {
+        res.status(401).json({ message: "Not authorized" });
+      } else {
+        const filename = thing.imageUrl.split("/images/")[1];
+        fs.unlink(`images/${filename}`, () => {
+          Recipe.deleteOne({ _id: req.params.id })
+            .then(() => {
+              res.status(200).json({ message: "Recette supprimée !" });
+            })
+            .catch((error) => res.status(401).json({ error }));
+        });
+      }
     })
     .catch((error) => {
-      res.status(400).json({
-        error: error,
-      });
+      res.status(500).json({ error });
     });
 };
 exports.getAllRecipes = (req, res, next) => {
