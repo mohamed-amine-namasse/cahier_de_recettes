@@ -6,8 +6,8 @@ const recipeCtrl = require("../controllers/recipe");
 
 router.get("/", recipeCtrl.getAllRecipes);
 router.post("/", multer, recipeCtrl.createRecipe);
-router.get("/:id", auth, recipeCtrl.getOneRecipe);
-router.put("/:id", auth, recipeCtrl.modifyRecipe);
-router.delete("/:id", auth, recipeCtrl.deleteRecipe);
+router.get("/:id", recipeCtrl.getOneRecipe);
+router.put("/:id", multer, recipeCtrl.modifyRecipe);
+router.delete("/:id", recipeCtrl.deleteRecipe);
 
 module.exports = router;
