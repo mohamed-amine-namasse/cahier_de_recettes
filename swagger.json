@@ -43,23 +43,7 @@
         "tags": ["recipe"],
         "summary": "Get the list of all recipes",
         "description": "Multiple status values can be provided with comma separated strings",
-        "operationId": "findRecipesByStatus",
         "produces": ["application/json", "application/xml"],
-        "parameters": [
-          {
-            "name": "status",
-            "in": "query",
-            "description": "Status values that need to be considered for filter",
-            "required": true,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": ["available", "pending", "sold"],
-              "default": "available"
-            },
-            "collectionFormat": "multi"
-          }
-        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -72,11 +56,14 @@
           },
           "400": {
             "description": "Invalid status value"
+          },
+          "401": {
+            "description": "Error"
           }
         },
         "security": [
           {
-            "petstore_auth": ["write:pets", "read:pets"]
+            "recipe_auth": ["write:recipes", "read:recipes"]
           }
         ]
       },
@@ -98,13 +85,19 @@
           }
         ],
         "responses": {
-          "405": {
-            "description": "Invalid input"
+          "201": {
+            "description": "Recipe added successfully"
+          },
+          "400": {
+            "description": "Recipe can't be added"
+          },
+          "401": {
+            "description": "Error"
           }
         },
         "security": [
           {
-            "petstore_auth": ["write:pets", "read:pets"]
+            "recipe_auth": ["write:recipes", "read:recipes"]
           }
         ]
       }
@@ -132,13 +125,18 @@
               "$ref": "#/definitions/Recipe"
             }
           },
-          "400": {
-            "description": "Invalid ID supplied"
+          "401": {
+            "description": "Error"
           },
           "404": {
             "description": "Recipe not found"
           }
-        }
+        },
+        "security": [
+          {
+            "recipe_auth": ["write:recipes", "read:recipes"]
+          }
+        ]
       },
       "put": {
         "tags": ["recipe"],
@@ -165,19 +163,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Recipe updated"
+          },
           "400": {
             "description": "Invalid ID supplied"
           },
-          "404": {
+          "401": {
             "description": "Recipe not found"
-          },
-          "405": {
-            "description": "Validation exception"
           }
         },
         "security": [
           {
-            "petstore_auth": ["write:pets", "read:pets"]
+            "recipe_auth": ["write:recipes", "read:recipes"]
           }
         ]
       },
@@ -188,12 +186,6 @@
         "produces": ["application/json", "application/xml"],
         "parameters": [
           {
-            "name": "api_key",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
             "name": "recipeId",
             "in": "path",
             "description": "Recipe id to delete",
@@ -203,8 +195,14 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Recipe deleted"
+          },
           "400": {
             "description": "Invalid ID supplied"
+          },
+          "401": {
+            "description": "Error"
           },
           "404": {
             "description": "Recipe not found"
@@ -212,7 +210,7 @@
         },
         "security": [
           {
-            "petstore_auth": ["write:pets", "read:pets"]
+            "recipe_auth": ["write:recipes", "read:recipes"]
           }
         ]
       }
@@ -236,15 +234,16 @@
           }
         ],
         "responses": {
+          "201": {
+            "description": "Picture created"
+          },
           "405": {
             "description": "Invalid input"
+          },
+          "500": {
+            "description": "Error"
           }
-        },
-        "security": [
-          {
-            "petstore_auth": ["write:pets", "read:pets"]
-          }
-        ]
+        }
       }
     },
     "/api/auth/signup": {
@@ -267,8 +266,14 @@
           }
         ],
         "responses": {
-          "default": {
-            "description": "successful operation"
+          "201": {
+            "description": "User created"
+          },
+          "400": {
+            "description": "User can't be created"
+          },
+          "500": {
+            "description": "Error"
           }
         }
       }
@@ -316,24 +321,22 @@
           },
           "400": {
             "description": "Invalid username/password supplied"
+          },
+          "500": {
+            "description": "Error"
           }
         }
       }
     }
   },
   "securityDefinitions": {
-    "api_key": {
-      "type": "apiKey",
-      "name": "api_key",
-      "in": "header"
-    },
-    "petstore_auth": {
+    "recipe_auth": {
       "type": "oauth2",
-      "authorizationUrl": "https://petstore.swagger.io/oauth/authorize",
+      "authorizationUrl": "https://cahierdesrecettes.alwaysdata.net/oauth/authorize",
       "flow": "implicit",
       "scopes": {
-        "read:pets": "read your pets",
-        "write:pets": "modify pets in your account"
+        "read:recipes": "read your recipes",
+        "write:recipes": "modify recipes in your account"
       }
     }
   },
