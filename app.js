@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 });
 //app.use(bodyParser.json());
 
-app.use("/api/stuff", recipeRoutes);
+app.use("/api/recipe", recipeRoutes);
 app.use("/api/auth", userRoutes);
 app.use("/api/picture", pictureRoutes);
 app.use("/images", express.static(path.join(__dirname, "images")));
