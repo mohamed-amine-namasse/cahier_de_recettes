@@ -7,7 +7,7 @@ const recipeSchema = mongoose.Schema({
   author: { type: String, required: true },
   date: { type: Date, required: true },
   userId: { type: String, required: true },
-  imageUrl: { type: String, required: false, unique: true },
+  imageUrl: { type: String, required: true, unique: true },
 });
 
 module.exports = mongoose.model("Recipe", recipeSchema);

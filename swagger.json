@@ -343,6 +343,7 @@
   "definitions": {
     "Picture": {
       "type": "object",
+      "required": ["imageUrl"],
       "properties": {
         "imageUrl": {
           "type": "string"

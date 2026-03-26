@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
 const pictureSchema = mongoose.Schema({
-  imageUrl: { type: String, required: false, unique: true },
+  imageUrl: { type: String, required: true, unique: true },
 });
 
 pictureSchema.plugin(uniqueValidator);
